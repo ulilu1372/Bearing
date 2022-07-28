@@ -1,0 +1,140 @@
+#ГОСТ 3189-89
+
+s = input()
+right_side = 0
+left_side = 0
+root = 0
+
+hole_diameter = 0
+diameter_series = 0
+type_bearing = 0
+constructive_realization = 0 #везеде поправить с configuration
+width_series = 0
+
+#Дополнительные знаки справа начинаются с прописной буквы, а дополнительные знаки слева отделены от основного условного обозначения знаком тире.
+
+first_apperance = 20 #случайное большое число
+letters = 'НАЮXРГБДЛЕЯНЭКМУТСШ' 
+
+#выясняем первое появлнеие прописной буквы
+for i in range(len(letters) - 1):
+    try:
+        if int(s.index(letters[i])) < first_apperance:
+            first_apperance = s.index(letters[i])
+    except ValueError:
+        continue
+
+root = s 
+ 
+#процедура отделения дополнительных знаков справа и слева 
+if first_apperance != 20:
+    right_side = s[first_apperance:] #уточнить момент отрезки везде!!!
+    root = s[:first_apperance] 
+if '-' in s: 
+    left_side = root[:root.index('-')]
+    root = root[root.index('-') + 1:]
+
+#дополнить нулями
+if len(root) < 7:
+    root.zfill(7)
+    
+ #преобразование /
+ if '/' in root: #п. 2.1.1 
+    if root[len(root)- 3:] == '0,6':    #отделяем три знака с конца
+        hole_diameter == '0,6'
+        root = root[:len(root)- 3] + '0' #отделяем дробь и дополняем до нуля 
+    elif root[len(root)- 3:] == '1,5':
+        hole_diameter == '1,5'
+        root = root[:len(root) - 3] + '0'
+    elif root[len(root) - 3:] == '2,5':
+        hole_diameter == '2,5'
+        root = root[:len(root) - 3] + '0'
+    else: #отделить дробную часть и дополнить двумя нулями, п. 2.2.4
+        hole_diameter = root[root.index('/') - 1:]
+        root = root[:root.index('/')] + '00'#проверить как отделяет
+        
+if root[len(root) - 3] == '0': #если на 3-м знак 0, то по схеме 1
+    if hole_diameter == 0:
+        hole_diameter = root[len(root) - 1]
+        diameter_series = root[len(root) - 2]
+        type_bearing = root[len(root) - 4]
+        constructive_realization = root[len(root) - 6] + root[len(root) - 5]
+        width_series = root[len(root) - 7]
+    
+else: #иначе, по схеме 2
+    if hole_diameter == 0:
+        hole_diameter = root[len(root) - 2] + root[len(root) - 1]
+        diameter_series = root[len(root) - 3]
+        type_bearing = root[len(root) - 4]
+        constructive_realization = root[len(root) - 6] + root[len(root) - 5]
+        width_series = root[len(root) - 7]
+
+# проверить не подпадает ли подшипник с одними условнями под другие
+if len(hole_diameter) == 1 and s[1] == 5: #п. 2.1.2
+        print (hole_diameter, " Диаметр выражен дробным числом, округлен до целого")
+        
+if len(hole_diameter) == 2 and hole_diameter == '00': #2.2.2
+        hole_diameter = 10 
+        print (hole_diameter)
+if len(hole_diameter) == 2 and hole_diameter == '01': 
+        hole_diameter = 12
+        print (hole_diameter)
+if len(hole_diameter) == 2 and hole_diameter == '02': 
+        hole_diameter = 15
+        print (hole_diameter)
+if len(hole_diameter) == 2 and hole_diameter == '03': 
+        hole_diameter = 17 
+        print (hole_diameter)
+      
+if len(hole_diameter) == 2 and int(hole_diameter[0]) == 0: # 2.2.1 ПРОВЕРИТЬ!!!
+    hole_diameter = int(hole_diameter[1]) * 5
+if len(hole_diameter) == 2: #допустима ли конструкция с elif?
+    hole_diameter = int((hole_diameter) * 5
+      
+if str(root[len(root) - 2] + root[len(root) - 1]) == '00': #п. 2.2.2.
+        hole_diameter = 10
+elif str(root[len(root) - 2] + root[len(root) - 1]) == '01':
+        hole_diameter = 12
+elif str(root[len(root) - 2] + root[len(root) - 1]) == '02':
+        hole_diameter = 15
+else str(root[len(root) - 2] + root[len(root) - 1]) == '03':
+        hole_diameter = 17
+print (hole_diameter)
+ 
+if len(hole_diameter) == 2 and int(root[len(root) - 3]) == 9: #2.2.3 и 2.2.5
+        print(hole_diameter, 'Диаметр является приближенным')
+        
+print(diameter_series,' см. по ГОСТ 3478')
+
+if type_bearing == '0':
+    print(type_bearing, 'Тип подшипника - Шариковый радиальный')
+if type_bearing == '1':
+    print(type_bearing, 'Тип подшипника - Шариковый радиальный сферический')
+if type_bearing == '2':
+    print(type_bearing, 'Тип подшипника - Роликовый радиальный с короткими цилиндрическими роликами')
+if type_bearing == '3':
+    print(type_bearing, 'Тип подшипника - Роликовый радиальный сферический')
+if type_bearing == '4':
+    print(type_bearing, 'Тип подшипника - Роликовый игольчатый или с длинными цилиндрическими роликами')
+if type_bearing == '5':
+    print(type_bearing, 'Тип подшипника - Радиальный роликовый или с витыми роликами')
+if type_bearing == '6':
+    print(type_bearing, 'Тип подшипника - Радиально-упорный шариковый')
+if type_bearing == '7':
+    print(type_bearing, 'Тип подшипника - Роликовый конический')
+if type_bearing == '8':
+    print(type_bearing, 'Тип подшипника - Упорный или упорно-радиальный шариковый')
+if type_bearing == '9':
+    print(type_bearing, 'Тип подшипника - Упорный или упорно-радиальный роликовый')
+    
+print(constructive_realization,' см. по ГОСТ 3395')
+
+if len(hole_diameter) == 1: #п. 3.3
+    if int(root[len(root) - 2]) == 6 or int(root[len(root) - 2]) == 7:
+        width_series = None
+        print('Неопределенная серия, см. по ГОСТ 3478')
+if len(hole_diameter) == 2:
+    if int(root[len(root) - 2]) == 7 or int(root[len(root) - 2]) == :
+        width_series = None
+        print('Неопределенная серия, см. по ГОСТ 3478')
+print(width_series,' см. по ГОСТ 3478')
